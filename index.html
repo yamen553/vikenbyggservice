@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viken Byggservice AS</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background-color: #0e2a47;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #145e9b;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav button {
+      background-color: transparent;
+      color: #ffffff;
+      border: none;
+      margin: 0 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    nav button:hover,
+    nav button.active {
+      background-color: #0e2a47;
+      border-radius: 5px;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #0e2a47;
+      border-bottom: 2px solid #145e9b;
+      padding-bottom: 0.5rem;
+    }
+
+    button,
+    input[type="submit"] {
+      background-color: #145e9b;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover,
+    input[type="submit"]:hover {
+      background-color: #0e2a47;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .review {
+      border-bottom: 1px solid #ccc;
+      padding: 1rem 0;
+    }
+
+    .stars {
+      color: #f1c40f;
+      margin-bottom: 0.5rem;
+    }
+
+    .video-slide iframe {
+      width: 100%;
+      height: 300px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .video-edit-btns button {
+      background-color: #6c757d;
+      margin-top: 0.5rem;
+    }
+
+    .video-edit-btns button:hover {
+      background-color: #5a6268;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #0e2a47;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Viken Byggservice AS</h1>
+  </header>
+  <nav>
+    <button onclick="showTab('video')">Video</button>
+    <button onclick="showTab('omtaler')">Omtaler</button>
+    <button onclick="showTab('kontakt')">Kontakt</button>
+    <button onclick="showTab('admin')">Admin</button>
+  </nav>
+  <main>
+    <section id="video" class="tab">
+      <h2>Videoer</h2>
+      <div id="video-list"></div>
+    </section>
+
+    <section id="omtaler" class="tab" style="display:none">
+      <h2>Omtaler</h2>
+      <form id="reviewForm">
+        <input type="text" id="reviewName" placeholder="Navn" required>
+        <textarea id="reviewText" placeholder="Din omtale" required></textarea>
+        <label>Stjerner:</label>
+        <select id="reviewStars">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <input type="submit" value="Send">
+      </form>
+      <div id="review-list"></div>
+    </section>
+
+    <section id="kontakt" class="tab" style="display:none">
+      <h2>Kontakt oss</h2>
+      <p>Tlf: 96879633 / 96758198</p>
+      <p>Email: <a href="mailto:vikenbyggservice20@gmail.com">vikenbyggservice20@gmail.com</a></p>
+    </section>
+
+    <section id="admin" class="tab" style="display:none">
+      <h2>Adminpanel</h2>
+      <div id="admin-login">
+        <input type="password" id="adminPass" placeholder="Skriv admin passord">
+        <button onclick="loginAdmin()">Logg inn</button>
+      </div>
+      <div id="admin-content" style="display:none">
+        <input type="text" id="videoUrl" placeholder="YouTube-lenke">
+        <button onclick="addVideo()">Legg til video</button>
+      </div>
+    </section>
+  </main>
+  <footer>
+    &copy; 2025 Viken Byggservice AS
+  </footer>
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+
+    function showTab(id) {
+      tabs.forEach(tab => tab.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function loginAdmin() {
+      const pass = document.getElementById('adminPass').value;
+      if (pass === '12admin34') {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-content').style.display = 'block';
+      } else {
+        alert('Feil passord!');
+      }
+    }
+
+    function addVideo() {
+      const url = document.getElementById('videoUrl').value;
+      const embedUrl = url.replace("watch?v=", "embed/");
+      const videoDiv = document.createElement('div');
+      videoDiv.innerHTML = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
+      document.getElementById('video-list').appendChild(videoDiv);
+      document.getElementById('videoUrl').value = '';
+    }
+
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('reviewName').value;
+      const text = document.getElementById('reviewText').value;
+      const stars = document.getElementById('reviewStars').value;
+      const reviewDiv = document.createElement('div');
+      reviewDiv.classList.add('review');
+      reviewDiv.innerHTML = `<div class="stars">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</div><strong>${name}</strong><p>${text}</p>`;
+      document.getElementById('review-list').appendChild(reviewDiv);
+      this.reset();
+    });
+  </script>
+</body>
+</html>
